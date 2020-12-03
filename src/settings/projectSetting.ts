@@ -5,167 +5,165 @@ import { CacheTypeEnum } from '/@/enums/cacheEnum';
 import { ContentEnum, PermissionModeEnum, ThemeEnum, RouterTransitionEnum } from '/@/enums/appEnum';
 import { primaryColor } from '../../build/config/lessModifyVars';
 
-// ! You need to clear the browser cache after the change
+// ! 改动后需要清空浏览器缓存
 const setting: ProjectConfig = {
-  // Whether to show the configuration button
-  showSettingButton: true,
+    // 是否显示SettingButton
+    showSettingButton: true,
 
-  // Permission mode
-  permissionMode: PermissionModeEnum.ROLE,
+    // 权限模式
+    permissionMode: PermissionModeEnum.ROLE,
 
-  // Permission-related cache is stored in sessionStorage or localStorage
-  permissionCacheType: CacheTypeEnum.LOCAL,
+    // Permission-related cache is stored in sessionStorage or localStorage
+    permissionCacheType: CacheTypeEnum.LOCAL,
 
-  // color
-  // TODO Theme color
-  themeColor: primaryColor,
+    // color
+    // TODO Theme color
+    themeColor: primaryColor,
 
-  // Website gray mode, open for possible mourning dates
-  grayMode: false,
+    // 网站灰色模式，用于可能悼念的日期开启
+    grayMode: false,
 
-  // Color Weakness Mode
-  colorWeak: false,
+    // 色弱模式
+    colorWeak: false,
 
-  // Whether to cancel the menu, the top, the multi-tab page display, for possible embedded in other systems
-  fullContent: false,
+    // 是否取消菜单,顶部,多标签页显示, 用于可能内嵌在别的系统内
+    fullContent: false,
 
-  // content mode
-  contentMode: ContentEnum.FULL,
+    // 主题内容宽度
+    contentMode: ContentEnum.FULL,
 
-  // Whether to display the logo
-  showLogo: true,
+    // 是否显示logo
+    showLogo: true,
 
-  // Whether to show footer
-  showFooter: true,
+    // Whether to show footer
+    showFooter: true,
 
-  // locale setting
-  locale: {
-    show: true,
-    // Locale
-    lang: 'zh_CN',
-    // Default locale
-    fallback: 'zh_CN',
-    // available Locales
-    availableLocales: ['zh_CN', 'en'],
-  },
+    // locale setting
+    locale: {
+        show: true,
+        // Locale
+        lang: 'zh_CN',
+        // Default locale
+        fallback: 'zh_CN',
+        // available Locales
+        availableLocales: ['zh_CN', 'en'],
+    },
 
-  // Header configuration
-  headerSetting: {
-    // header bg color
-    bgColor: '#ffffff',
-    // Fixed at the top
-    fixed: true,
-    // Whether to show top
-    show: true,
-    // theme
-    theme: ThemeEnum.LIGHT,
-    // Whether to enable the lock screen function
-    useLockPage: true,
-    // Whether to show the refresh button
-    showRedo: true,
-    // Whether to show the full screen button
-    showFullScreen: true,
-    // Whether to show the document button
-    showDoc: false,
-    // Whether to show the notification button
-    showNotice: false,
-  },
+    // 头部配置
+    headerSetting: {
+        // header bg color
+        bgColor: '#ffffff',
+        // 固定头部
+        fixed: true,
+        // 是否显示顶部
+        show: true,
+        // 主题
+        theme: ThemeEnum.LIGHT,
+        // 开启锁屏功能
+        useLockPage: true,
+        // 显示刷新按钮
+        showRedo: true,
+        // 显示全屏按钮
+        showFullScreen: true,
+        // 显示文档按钮
+        showDoc: false,
+        // 显示消息中心按钮
+        showNotice: false,
+    },
 
-  // Menu configuration
-  menuSetting: {
-    // sidebar menu bg color
-    bgColor: '#273352',
-    //  Whether to fix the left menu
-    fixed: true,
-    // Menu collapse
-    collapsed: false,
-    // Whether to display the menu name when folding the menu
-    collapsedShowTitle: false,
-    // Whether it can be dragged
-    // Only limited to the opening of the left menu, the mouse has a drag bar on the right side of the menu
-    canDrag: false,
-    // Whether to show no dom
-    show: true,
-    // Whether to show dom
-    hidden: true,
-    // Whether to show search box
-    showSearch: true,
-    // Menu width
-    menuWidth: 210,
-    // Menu mode
-    mode: MenuModeEnum.INLINE,
-    // Menu type
-    type: MenuTypeEnum.SIDEBAR,
-    // Menu theme
-    theme: ThemeEnum.DARK,
-    // Split menu
-    split: false,
-    // Top menu layout
-    topMenuAlign: 'center',
-    // Hide the search box when the menu is collapsed
-    collapsedShowSearch: false,
-    // Fold trigger position
-    trigger: TriggerEnum.HEADER,
-    // Turn on accordion mode, only show a menu
-    accordion: true,
-  },
+    // Menu configuration
+    menuSetting: {
+        // sidebar menu bg color
+        bgColor: '#273352',
+        //  Whether to fix the left menu
+        fixed: true,
+        // 菜单折叠
+        collapsed: false,
+        // 折叠菜单时候是否显示菜单名
+        collapsedShowTitle: false,
+        // 是否可拖拽
+        canDrag: false,
+        // 是否显示
+        show: true,
+        // Whether to show dom
+        hidden: true,
+        // 是否显示搜索框
+        showSearch: true,
+        // 菜单宽度
+        menuWidth: 210,
+        // 菜单模式
+        mode: MenuModeEnum.INLINE,
+        // 菜单类型
+        type: MenuTypeEnum.SIDEBAR,
+        // 菜单主题
+        theme: ThemeEnum.DARK,
+        // 分割菜单
+        split: false,
+        // 顶部菜单布局
+        topMenuAlign: 'center',
+        // 折叠菜单时候隐藏搜索框
+        collapsedShowSearch: false,
+        // 折叠触发器的位置
+        trigger: TriggerEnum.HEADER,
+        // Turn on accordion mode, only show a menu
+        accordion: true,
+    },
 
-  // Multi-label
-  multiTabsSetting: {
-    // Turn on
-    show: true,
-    // Is it possible to drag and drop sorting tabs
-    canDrag: true,
-    // Turn on quick actions
-    showQuick: true,
-    // Maximum number of tab cache
-    max: 12,
-  },
+    // 多标签
+    multiTabsSetting: {
+        // 开启
+        show: true,
+        // 开启快速操作
+        canDrag: true,
+        // 显示icon
+        showQuick: true,
+        // 标签页缓存最大数量
+        max: 12,
+    },
 
-  // Transition Setting
-  transitionSetting: {
-    //  Whether to open the page switching animation
-    // The disabled state will also disable pageLoadinng
-    enable: true,
+    // Transition Setting
+    transitionSetting: {
+        //  Whether to open the page switching animation
+        // The disabled state will also disable pageLoadinng
+        enable: true,
 
-    // Route basic switching animation
-    basicTransition: RouterTransitionEnum.FADE_SIDE,
+        // Route basic switching animation
+        basicTransition: RouterTransitionEnum.FADE_SIDE,
 
-    // Whether to open page switching loading
-    // Only open when enable=true
-    openPageLoading: true,
+        // 是否开启页面切换loading
+        // Only open when enable=true
+        openPageLoading: true,
 
-    // Whether to open the top progress bar
-    openNProgress: false,
-  },
+        // 开启顶部进度条
+        openNProgress: false,
+    },
+    // 是否开启KeepAlive缓存  开发时候最好关闭,不然每次都需要清除缓存
+    openKeepAlive: true,
 
-  // Whether to enable KeepAlive cache is best to close during development, otherwise the cache needs to be cleared every time
-  openKeepAlive: true,
+    // 自动锁屏时间，为0不锁屏。 单位分钟 默认1个小时
+    lockTime: 0,
 
-  // Automatic screen lock time, 0 does not lock the screen. Unit minute default 0
-  lockTime: 0,
+    // 显示面包屑
+    showBreadCrumb: true,
 
-  // Whether to show breadcrumbs
-  showBreadCrumb: true,
+    // 显示面包屑图标
+    showBreadCrumbIcon: false,
 
-  // Whether to show the breadcrumb icon
-  showBreadCrumbIcon: false,
+    // Use error-handler-plugin
+    useErrorHandle: false,
 
-  // Use error-handler-plugin
-  useErrorHandle: false,
+    // 是否开启回到顶部
+    useOpenBackTop: true,
 
-  // Whether to open back to top
-  useOpenBackTop: true,
+    //  是否可以嵌入iframe页面
+    canEmbedIFramePage: true,
 
-  //  Is it possible to embed iframe pages
-  canEmbedIFramePage: true,
+    // 切换界面的时候是否删除未关闭的message及notify
+    closeMessageOnSwitch: true,
 
-  // Whether to delete unclosed messages and notify when switching the interface
-  closeMessageOnSwitch: true,
-
-  // Whether to cancel the http request that has been sent but not responded when switching the interface.
-  // If it is enabled, I want to overwrite a single interface. Can be set in a separate interface
-  removeAllHttpPending: true,
+    // 切换界面的时候是否取消已经发送但是未响应的http请求。
+    // 如果开启,想对单独接口覆盖。可以在单独接口设置
+    removeAllHttpPending: true,
 };
 
 export default setting;

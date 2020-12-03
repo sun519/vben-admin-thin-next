@@ -1,3 +1,6 @@
+/**
+ * 默认结构布局配置
+ */
 import type { MenuSetting } from '/@/types/config';
 
 import { computed, unref } from 'vue';
@@ -8,127 +11,130 @@ import { SIDE_BAR_MINI_WIDTH, SIDE_BAR_SHOW_TIT_MINI_WIDTH } from '/@/enums/appE
 import { MenuModeEnum, MenuTypeEnum, TriggerEnum } from '/@/enums/menuEnum';
 
 export function useMenuSetting() {
-  // Get menu configuration
-  const getMenuSetting = computed(() => appStore.getProjectConfig.menuSetting);
+    // Get menu configuration
+    const getMenuSetting = computed(() => appStore.getProjectConfig.menuSetting);
 
-  const getCollapsed = computed(() => unref(getMenuSetting).collapsed);
+    const getCollapsed = computed(() => unref(getMenuSetting).collapsed);
 
-  const getMenuType = computed(() => unref(getMenuSetting).type);
+    const getMenuType = computed(() => unref(getMenuSetting).type);
 
-  const getMenuMode = computed(() => unref(getMenuSetting).mode);
+    const getMenuMode = computed(() => unref(getMenuSetting).mode);
 
-  const getMenuFixed = computed(() => unref(getMenuSetting).fixed);
+    const getMenuFixed = computed(() => unref(getMenuSetting).fixed);
 
-  const getShowMenu = computed(() => unref(getMenuSetting).show);
+    const getShowMenu = computed(() => unref(getMenuSetting).show);
 
-  const getMenuHidden = computed(() => unref(getMenuSetting).hidden);
+    const getMenuHidden = computed(() => unref(getMenuSetting).hidden);
 
-  const getMenuWidth = computed(() => unref(getMenuSetting).menuWidth);
+    const getMenuWidth = computed(() => unref(getMenuSetting).menuWidth);
 
-  const getTrigger = computed(() => unref(getMenuSetting).trigger);
+    const getTrigger = computed(() => unref(getMenuSetting).trigger);
 
-  const getMenuTheme = computed(() => unref(getMenuSetting).theme);
+    const getMenuTheme = computed(() => unref(getMenuSetting).theme);
 
-  const getSplit = computed(() => unref(getMenuSetting).split);
+    const getSplit = computed(() => unref(getMenuSetting).split);
 
-  const getMenuBgColor = computed(() => unref(getMenuSetting).bgColor);
+    const getMenuBgColor = computed(() => unref(getMenuSetting).bgColor);
 
-  const getCanDrag = computed(() => unref(getMenuSetting).canDrag);
+    const getCanDrag = computed(() => unref(getMenuSetting).canDrag);
 
-  const getAccordion = computed(() => unref(getMenuSetting).accordion);
+    const getAccordion = computed(() => unref(getMenuSetting).accordion);
 
-  const getCollapsedShowTitle = computed(() => unref(getMenuSetting).collapsedShowTitle);
+    const getCollapsedShowTitle = computed(() => unref(getMenuSetting).collapsedShowTitle);
 
-  const getCollapsedShowSearch = computed(() => unref(getMenuSetting).collapsedShowSearch);
+    const getCollapsedShowSearch = computed(() => unref(getMenuSetting).collapsedShowSearch);
 
-  const getTopMenuAlign = computed(() => unref(getMenuSetting).topMenuAlign);
+    const getTopMenuAlign = computed(() => unref(getMenuSetting).topMenuAlign);
 
-  const getIsSidebarType = computed(() => unref(getMenuType) === MenuTypeEnum.SIDEBAR);
+    const getIsSidebarType = computed(() => unref(getMenuType) === MenuTypeEnum.MIX);
 
-  const getIsTopMenu = computed(() => unref(getMenuType) === MenuTypeEnum.TOP_MENU);
+    const getIsTopMenu = computed(() => unref(getMenuType) === MenuTypeEnum.TOP_MENU);
 
-  const getShowTopMenu = computed(() => {
-    return unref(getMenuMode) === MenuModeEnum.HORIZONTAL || unref(getSplit);
-  });
+    const getShowTopMenu = computed(() => {
+        return unref(getMenuMode) === MenuModeEnum.HORIZONTAL || unref(getSplit);
+    });
 
-  const getShowHeaderTrigger = computed(() => {
-    if (
-      unref(getMenuType) === MenuTypeEnum.TOP_MENU ||
-      !unref(getShowMenu) ||
-      !unref(getMenuHidden)
-    ) {
-      return false;
+    const getShowHeaderTrigger = computed(() => {
+        if (
+            unref(getMenuType) === MenuTypeEnum.TOP_MENU ||
+            !unref(getShowMenu) ||
+            !unref(getMenuHidden)
+        ) {
+            return false;
+        }
+
+        return unref(getTrigger) === TriggerEnum.HEADER;
+    });
+
+    const getShowSearch = computed(() => {
+        return (
+            unref(getMenuSetting).showSearch &&
+            !(
+                unref(getMenuType) === MenuTypeEnum.MIX &&
+                unref(getMenuMode) === MenuModeEnum.HORIZONTAL
+            )
+        );
+    });
+
+    const getIsHorizontal = computed(() => {
+        return unref(getMenuMode) === MenuModeEnum.HORIZONTAL;
+    });
+
+    const getRealWidth = computed(() => {
+        return unref(getCollapsed) ? unref(getMiniWidthNumber) : unref(getMenuWidth);
+    });
+
+    const getMiniWidthNumber = computed(() => {
+        const { collapsedShowTitle } = unref(getMenuSetting);
+        return collapsedShowTitle ? SIDE_BAR_SHOW_TIT_MINI_WIDTH : SIDE_BAR_MINI_WIDTH;
+    });
+
+    const getCalcContentWidth = computed(() => {
+        const width = unref(getIsTopMenu) || !unref(getShowMenu) ? 0 : unref(getRealWidth);
+        return `calc(100% - ${unref(width)}px)`;
+    });
+
+    // Set menu configuration
+    function setMenuSetting(menuSetting: Partial<MenuSetting>): void {
+        appStore.commitProjectConfigState({ menuSetting });
     }
 
-    return unref(getTrigger) === TriggerEnum.HEADER;
-  });
+    function toggleCollapsed() {
+        setMenuSetting({
+            collapsed: !unref(getCollapsed),
+        });
+    }
 
-  const getShowSearch = computed(() => {
-    return (
-      unref(getMenuSetting).showSearch &&
-      !(unref(getMenuType) === MenuTypeEnum.MIX && unref(getMenuMode) === MenuModeEnum.HORIZONTAL)
-    );
-  });
+    return {
+        setMenuSetting,
 
-  const getIsHorizontal = computed(() => {
-    return unref(getMenuMode) === MenuModeEnum.HORIZONTAL;
-  });
+        toggleCollapsed,
 
-  const getRealWidth = computed(() => {
-    return unref(getCollapsed) ? unref(getMiniWidthNumber) : unref(getMenuWidth);
-  });
-
-  const getMiniWidthNumber = computed(() => {
-    const { collapsedShowTitle } = unref(getMenuSetting);
-    return collapsedShowTitle ? SIDE_BAR_SHOW_TIT_MINI_WIDTH : SIDE_BAR_MINI_WIDTH;
-  });
-
-  const getCalcContentWidth = computed(() => {
-    const width = unref(getIsTopMenu) || !unref(getShowMenu) ? 0 : unref(getRealWidth);
-    return `calc(100% - ${unref(width)}px)`;
-  });
-
-  // Set menu configuration
-  function setMenuSetting(menuSetting: Partial<MenuSetting>): void {
-    appStore.commitProjectConfigState({ menuSetting });
-  }
-
-  function toggleCollapsed() {
-    setMenuSetting({
-      collapsed: !unref(getCollapsed),
-    });
-  }
-
-  return {
-    setMenuSetting,
-
-    toggleCollapsed,
-
-    getMenuFixed,
-    getMenuSetting,
-    getRealWidth,
-    getMenuType,
-    getMenuMode,
-    getShowMenu,
-    getCollapsed,
-    getMiniWidthNumber,
-    getCalcContentWidth,
-    getMenuWidth,
-    getTrigger,
-    getSplit,
-    getMenuTheme,
-    getCanDrag,
-    getIsHorizontal,
-    getShowSearch,
-    getCollapsedShowTitle,
-    getCollapsedShowSearch,
-    getIsSidebarType,
-    getAccordion,
-    getShowTopMenu,
-    getShowHeaderTrigger,
-    getTopMenuAlign,
-    getMenuHidden,
-    getIsTopMenu,
-    getMenuBgColor,
-  };
+        getMenuFixed,
+        getMenuSetting,
+        getRealWidth,
+        getMenuType,
+        getMenuMode,
+        getShowMenu,
+        getCollapsed,
+        getMiniWidthNumber,
+        getCalcContentWidth,
+        getMenuWidth,
+        getTrigger,
+        getSplit,
+        getMenuTheme,
+        getCanDrag,
+        getIsHorizontal,
+        getShowSearch,
+        getCollapsedShowTitle,
+        getCollapsedShowSearch,
+        getIsSidebarType,
+        getAccordion,
+        getShowTopMenu,
+        getShowHeaderTrigger,
+        getTopMenuAlign,
+        getMenuHidden,
+        getIsTopMenu,
+        getMenuBgColor,
+    };
 }
