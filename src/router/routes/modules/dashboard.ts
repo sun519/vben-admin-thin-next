@@ -1,3 +1,7 @@
+/**
+ * 顶部标签模块
+ */
+
 import type { AppRouteModule } from '/@/router/types';
 
 import { PAGE_LAYOUT_COMPONENT } from '/@/router/constant';
@@ -10,7 +14,7 @@ const dashboard: AppRouteModule = {
         redirect: '/dashboard/welcome',
         meta: {
             icon: 'ant-design:home-outlined',
-            title: 'routes.dashboard.dashboard',
+            title: '首页',
         },
     },
 
@@ -20,7 +24,8 @@ const dashboard: AppRouteModule = {
             name: 'Welcome',
             component: () => import('/@/views/dashboard/welcome/index.vue'),
             meta: {
-                title: 'routes.dashboard.welcome',
+                title: 'routes.dashboard.welcome', // 国际化用法
+                // title: '落地页',
                 affix: true,
                 icon: 'ant-design:home-outlined',
             },
@@ -30,7 +35,7 @@ const dashboard: AppRouteModule = {
             name: 'Ceshi',
             component: () => import('/@/views/dashboard/ces/index.vue'),
             meta: {
-                title: '测试菜单',
+                title: 'routes.dashboard.test',
                 icon: 'ant-design:home-outlined',
             },
         },
@@ -38,7 +43,7 @@ const dashboard: AppRouteModule = {
             path: '/ceshi2',
             name: 'Ceshi2',
             meta: {
-                title: '测试菜单2',
+                title: 'routes.dashboard.test2',
             },
             children: [
                 {
@@ -46,7 +51,7 @@ const dashboard: AppRouteModule = {
                     name: 'Basic',
                     component: () => import('/@/views/dashboard/ces/index.vue'),
                     meta: {
-                        title: '三级菜单',
+                        title: 'routes.dashboard.test3',
                     },
                 },
             ],

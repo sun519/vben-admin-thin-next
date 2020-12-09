@@ -35,17 +35,16 @@ const setting: ProjectConfig = {
     // 是否显示logo
     showLogo: true,
 
-    // Whether to show footer
-    showFooter: true,
+    // 是否显示页脚
+    showFooter: false,
 
-    // locale setting
+    // 国际化
     locale: {
         show: true,
         // Locale
         lang: 'zh_CN',
         // Default locale
         fallback: 'zh_CN',
-        // available Locales
         availableLocales: ['zh_CN', 'en'],
     },
 
@@ -88,7 +87,7 @@ const setting: ProjectConfig = {
         // Whether to show dom
         hidden: true,
         // 是否显示搜索框
-        showSearch: true,
+        showSearch: false,
         // 菜单宽度
         menuWidth: 210,
         // 菜单模式
@@ -135,7 +134,7 @@ const setting: ProjectConfig = {
         openPageLoading: true,
 
         // 开启顶部进度条
-        openNProgress: false,
+        openNProgress: true,
     },
     // 是否开启KeepAlive缓存  开发时候最好关闭,不然每次都需要清除缓存
     openKeepAlive: true,

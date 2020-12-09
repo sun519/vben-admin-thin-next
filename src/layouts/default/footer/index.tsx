@@ -11,24 +11,27 @@ import { openWindow } from '/@/utils';
 import { useI18n } from '/@/hooks/web/useI18n';
 
 export default defineComponent({
-  name: 'LayoutContent',
-  setup() {
-    const { t } = useI18n('layout.footer');
-    return () => {
-      return (
-        <Layout.Footer class="layout-footer">
-          {() => (
-            <>
-              <div class="layout-footer__links">
-                <a onClick={() => openWindow(SITE_URL)}>{t('onlinePreview')}</a>
-                <GithubFilled onClick={() => openWindow(GITHUB_URL)} class="github" />
-                <a onClick={() => openWindow(DOC_URL)}>{t('onlineDocument')}</a>
-              </div>
-              <div>Copyright &copy;2020 Vben Admin</div>
-            </>
-          )}
-        </Layout.Footer>
-      );
-    };
-  },
+    name: 'LayoutContent',
+    setup() {
+        const { t } = useI18n('layout.footer');
+        return () => {
+            return (
+                <Layout.Footer class="layout-footer">
+                    {() => (
+                        <>
+                            {/* <div class="layout-footer__links">
+                                <a onClick={() => openWindow(SITE_URL)}>{t('onlinePreview')}</a>
+                                <GithubFilled
+                                    onClick={() => openWindow(GITHUB_URL)}
+                                    class="github"
+                                />
+                                <a onClick={() => openWindow(DOC_URL)}>{t('onlineDocument')}</a>
+                            </div> */}
+                            <div>Copyright &copy;2020 Mucep Cloudbox</div>
+                        </>
+                    )}
+                </Layout.Footer>
+            );
+        };
+    },
 });

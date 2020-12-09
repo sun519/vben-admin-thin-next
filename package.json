@@ -1,6 +1,6 @@
 {
-    "name": "vben-admin-2.0",
-    "version": "2.0.0-rc.12",
+    "name": "xx-cms",
+    "version": "1.0",
     "scripts": {
         "bootstrap": "yarn install",
         "start": "esno ./build/script/preserve.ts && cross-env NODE_ENV=development vite",
@@ -100,21 +100,7 @@
         "vue-eslint-parser": "^7.1.1",
         "yargs": "^16.1.0"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/anncwb/vue-vben-admin.git"
-    },
     "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/anncwb/vue-vben-admin/issues"
-    },
-    "homepage": "https://github.com/anncwb/vue-vben-admin",
-    "changelog": {
-        "bugsUrl": "https://github.com/anncwb/vue-vben-admin/issues",
-        "emojis": true,
-        "authorName": false,
-        "authorEmail": false
-    },
     "husky": {
         "hooks": {
             "pre-commit": "ls-lint && lint-staged",
