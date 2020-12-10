@@ -12,6 +12,9 @@ import { setApp } from '/@/setup/App';
 
 import { isDevMode, isProdMode, isUseMock } from '/@/utils/env';
 
+import mock from '/@/mock';
+mock.init();
+
 import '/@/design/index.less';
 
 import '/@/locales/index';
@@ -38,18 +41,18 @@ setupErrorHandle(app);
 
 // Mount when the route is ready
 router.isReady().then(() => {
-  app.mount('#app');
+    app.mount('#app');
 });
 
 // The development environment takes effect
 if (isDevMode()) {
-  app.config.performance = true;
-  window.__APP__ = app;
+    app.config.performance = true;
+    window.__APP__ = app;
 }
 
 // If you do not need to setting the mock service in the production environment, you can comment the code
 if (isProdMode() && isUseMock()) {
-  setupProdMockServer();
+    setupProdMockServer();
 }
 
 // Used to share app instances in other modules
