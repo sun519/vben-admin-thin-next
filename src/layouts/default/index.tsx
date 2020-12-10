@@ -6,7 +6,7 @@ import LayoutHeader from './header/LayoutHeader';
 
 import LayoutContent from './content';
 import LayoutFooter from './footer';
-import LayoutLockPage from './lock';
+import LayoutLockPage from './lock/index.vue';
 import LayoutSideBar from './sider';
 import SettingBtn from './setting/index.vue';
 import LayoutMultipleHeader from './header/LayoutMultipleHeader';
@@ -21,14 +21,20 @@ import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { createLayoutContext } from './useLayoutContext';
 
 import { registerGlobComp } from '/@/components/registerGlobComp';
-
+import { createBreakpointListen } from '/@/hooks/event/useBreakpoint';
+import { isMobile } from '/@/utils/is';
 export default defineComponent({
   name: 'DefaultLayout',
   setup() {
     const { currentRoute } = useRouter();
     const headerRef = ref<ComponentRef>(null);
+    const isMobileRef = ref(false);
 
-    createLayoutContext({ fullHeaderRef: headerRef });
+    createLayoutContext({ fullHeader: headerRef, isMobile: isMobileRef });
+
+    createBreakpointListen(() => {
+      isMobileRef.value = isMobile();
+    });
 
     // ! Only register global components here
     // ! Can reduce the size of the first screen code

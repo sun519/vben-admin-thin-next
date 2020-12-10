@@ -1,16 +1,16 @@
 <template>
   <div>
     <a-button-group>
-      <a-button type="primary" @click="openUploadModal" preIcon="ant-design:cloud-upload-outlined">
-        {{ t('upload') }}
+      <a-button type="primary" @click="openUploadModal" preIcon="carbon:cloud-upload">
+        {{ t('component.upload.upload') }}
       </a-button>
       <Tooltip placement="bottom" v-if="showPreview">
         <template #title>
-          {{ t('uploaded') }}
+          {{ t('component.upload.uploaded') }}
           <template v-if="fileListRef.length">{{ fileListRef.length }}</template>
         </template>
         <a-button @click="openPreviewModal">
-          <Icon icon="ant-design:eye-outlined" />
+          <Icon icon="bi:eye" />
           <template v-if="fileListRef.length && showPreviewNumber">
             {{ fileListRef.length }}
           </template>
@@ -46,7 +46,7 @@
     components: { UploadModal, UploadPreviewModal, Icon, Tooltip },
     props: uploadContainerProps,
     setup(props, { emit, attrs }) {
-      const { t } = useI18n('component.upload');
+      const { t } = useI18n();
       // 上传modal
       const [registerUploadModal, { openModal: openUploadModal }] = useModal();
 

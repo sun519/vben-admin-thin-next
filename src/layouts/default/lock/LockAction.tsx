@@ -7,15 +7,15 @@ import { BasicForm, useForm } from '/@/components/Form/index';
 
 import headerImg from '/@/assets/images/header.jpg';
 
-import { appStore } from '/@/store/modules/app';
 import { userStore } from '/@/store/modules/user';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { lockStore } from '/@/store/modules/lock';
 
 const prefixCls = 'lock-modal';
 export default defineComponent({
   name: 'LockModal',
   setup(_, { attrs }) {
-    const { t } = useI18n('layout.header');
+    const { t } = useI18n();
     const [register, { closeModal }] = useModalInner();
 
     const [registerForm, { validateFields, resetFields }] = useForm({
@@ -23,37 +23,29 @@ export default defineComponent({
       schemas: [
         {
           field: 'password',
-          label: t('lockScreenPassword'),
+          label: t('layout.header.lockScreenPassword'),
           component: 'InputPassword',
           required: true,
         },
       ],
     });
 
-    async function lock(valid = true) {
-      let password: string | undefined = '';
+    async function lock() {
+      const values = (await validateFields()) as any;
+      const password: string | undefined = values.password;
+      closeModal();
 
-      try {
-        if (!valid) {
-          password = undefined;
-        } else {
-          const values = (await validateFields()) as any;
-          password = values.password;
-        }
-        closeModal();
-
-        appStore.commitLockInfoState({
-          isLock: true,
-          pwd: password,
-        });
-        await resetFields();
-      } catch (error) {}
+      lockStore.commitLockInfoState({
+        isLock: true,
+        pwd: password,
+      });
+      await resetFields();
     }
 
     return () => (
       <BasicModal
         footer={null}
-        title={t('lockScreen')}
+        title={t('layout.header.lockScreen')}
         {...attrs}
         class={prefixCls}
         onRegister={register}
@@ -69,10 +61,7 @@ export default defineComponent({
 
             <div class={`${prefixCls}__footer`}>
               <Button type="primary" block class="mt-2" onClick={lock}>
-                {() => t('lockScreenBtn')}
-              </Button>
-              <Button block class="mt-2" onClick={lock.bind(null, false)}>
-                {() => t('notLockScreenPassword')}
+                {() => t('layout.header.lockScreenBtn')}
               </Button>
             </div>
           </div>

@@ -18,7 +18,7 @@ export default defineComponent({
   props: rotateProps,
   emits: ['success', 'change', 'update:value'],
   setup(props, { emit, attrs }) {
-    const basicRef = ref<RefInstanceType<DragVerifyActionType>>(null);
+    const basicRef = ref<Nullable<DragVerifyActionType>>(null);
     const state = reactive({
       showTip: false,
       isPassing: false,
@@ -30,7 +30,7 @@ export default defineComponent({
       endTime: 0,
       draged: false,
     });
-    const { t } = useI18n('component.verify');
+    const { t } = useI18n();
 
     watch(
       () => state.isPassing,
@@ -113,7 +113,7 @@ export default defineComponent({
       }
       state.isPassing = false;
 
-      basicEl.$.resume();
+      basicEl.resume();
       handleImgOnLoad();
     }
 
@@ -146,7 +146,9 @@ export default defineComponent({
             />
             {state.showTip && (
               <span class={[`ir-dv-img__tip`, state.isPassing ? 'success' : 'error']}>
-                {state.isPassing ? t('time', { time: time.toFixed(1) }) : t('error')}
+                {state.isPassing
+                  ? t('component.verify.time', { time: time.toFixed(1) })
+                  : t('component.verify.error')}
               </span>
             )}
             {!state.showTip && !state.draged && (

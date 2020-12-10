@@ -1,4 +1,3 @@
-import { appStore } from './app';
 import type {
   LoginParams,
   GetUserInfoByUserIdModel,
@@ -22,6 +21,7 @@ import { loginApi, getUserInfoById } from '/@/api/sys/user';
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { ErrorMessageMode } from '/@/utils/http/axios/types';
 
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;
 
@@ -95,9 +95,16 @@ class User extends VuexModule {
    * @description: login
    */
   @Action
-  async login(params: LoginParams, goHome = true): Promise<GetUserInfoByUserIdModel | null> {
+  async login(
+    params: LoginParams & {
+      goHome?: boolean;
+      mode?: ErrorMessageMode;
+    }
+  ): Promise<GetUserInfoByUserIdModel | null> {
     try {
-      const data = await loginApi(params);
+      const { goHome = true, mode, ...loginParams } = params;
+      const data = await loginApi(loginParams, mode);
+
       const { token, userId } = data;
       // get user info
       const userInfo = await this.getUserInfoAction({ userId });
@@ -107,12 +114,7 @@ class User extends VuexModule {
 
       // const name = FULL_PAGE_NOT_FOUND_ROUTE.name;
       // name && router.removeRoute(name);
-      goHome &&
-        (await router.push(PageEnum.BASE_HOME).then(() => {
-          setTimeout(() => {
-            appStore.commitPageLoadingState(false);
-          }, 30);
-        }));
+      goHome && router.replace(PageEnum.BASE_HOME);
       return userInfo;
     } catch (error) {
       return null;
@@ -143,11 +145,11 @@ class User extends VuexModule {
   @Action
   async confirmLoginOut() {
     const { createConfirm } = useMessage();
-    const { t } = useI18n('sys.app');
+    const { t } = useI18n();
     createConfirm({
       iconType: 'warning',
-      title: t('loginOutTip'),
-      content: t('loginOutMessage'),
+      title: t('sys.app.loginOutTip'),
+      content: t('sys.app.loginOutMessage'),
       onOk: async () => {
         await this.loginOut(true);
       },
