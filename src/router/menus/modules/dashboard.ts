@@ -4,7 +4,7 @@ const menu: MenuModule = {
     orderNo: 0,
     menu: {
         path: '/dashboard',
-        name: 'routes.dashboard.welcome',
+        name: 'routes.dashboard.dashboard',
         // name: '首页',
         children: [
             {

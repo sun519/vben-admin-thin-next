@@ -14,7 +14,7 @@ const dashboard: AppRouteModule = {
         redirect: '/dashboard/welcome',
         meta: {
             icon: 'ant-design:home-outlined',
-            title: '首页',
+            title: 'routes.dashboard.dashboard',
         },
     },
 
