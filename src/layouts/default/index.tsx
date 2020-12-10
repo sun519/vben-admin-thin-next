@@ -6,7 +6,7 @@ import LayoutHeader from './header/LayoutHeader';
 
 import LayoutContent from './content';
 import LayoutFooter from './footer';
-import LayoutLockPage from './lock';
+import LayoutLockPage from './lock/index.vue';
 import LayoutSideBar from './sider';
 import SettingBtn from './setting/index.vue';
 import LayoutMultipleHeader from './header/LayoutMultipleHeader';
@@ -21,82 +21,90 @@ import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { createLayoutContext } from './useLayoutContext';
 
 import { registerGlobComp } from '/@/components/registerGlobComp';
-
+import { createBreakpointListen } from '/@/hooks/event/useBreakpoint';
+import { isMobile } from '/@/utils/is';
 export default defineComponent({
-  name: 'DefaultLayout',
-  setup() {
-    const { currentRoute } = useRouter();
-    const headerRef = ref<ComponentRef>(null);
+    name: 'DefaultLayout',
+    setup() {
+        const { currentRoute } = useRouter();
+        const headerRef = ref<ComponentRef>(null);
+        const isMobileRef = ref(false);
 
-    createLayoutContext({ fullHeaderRef: headerRef });
+        createLayoutContext({ fullHeader: headerRef, isMobile: isMobileRef });
 
-    // ! Only register global components here
-    // ! Can reduce the size of the first screen code
-    // default layout It is loaded after login. So it won’t be packaged to the first screen
-    registerGlobComp();
+        createBreakpointListen(() => {
+            isMobileRef.value = isMobile();
+        });
 
-    const { getShowFullHeaderRef } = useHeaderSetting();
+        // ! Only register global components here
+        // ! Can reduce the size of the first screen code
+        // default layout It is loaded after login. So it won’t be packaged to the first screen
+        registerGlobComp();
 
-    const { getUseOpenBackTop, getShowSettingButton, getShowFooter } = useRootSetting();
+        const { getShowFullHeaderRef } = useHeaderSetting();
 
-    const { getShowMenu, getMenuMode, getSplit } = useMenuSetting();
+        const { getUseOpenBackTop, getShowSettingButton, getShowFooter } = useRootSetting();
 
-    const { getFullContent } = useFullContent();
+        const { getShowMenu, getMenuMode, getSplit } = useMenuSetting();
 
-    const getShowLayoutFooter = computed(() => {
-      return unref(getShowFooter) && !unref(currentRoute).meta?.hiddenFooter;
-    });
+        const { getFullContent } = useFullContent();
 
-    const showSideBarRef = computed(() => {
-      return (
-        unref(getSplit) ||
-        (unref(getShowMenu) &&
-          unref(getMenuMode) !== MenuModeEnum.HORIZONTAL &&
-          !unref(getFullContent))
-      );
-    });
+        const getShowLayoutFooter = computed(() => {
+            return unref(getShowFooter) && !unref(currentRoute).meta?.hiddenFooter;
+        });
 
-    function renderFeatures() {
-      return (
-        <>
-          <LayoutLockPage />
-          {/* back top */}
-          {unref(getUseOpenBackTop) && <BackTop target={() => document.body} />}
-          {/* open setting drawer */}
-          {unref(getShowSettingButton) && <SettingBtn />}
-        </>
-      );
-    }
+        const showSideBarRef = computed(() => {
+            return (
+                unref(getSplit) ||
+                (unref(getShowMenu) &&
+                    unref(getMenuMode) !== MenuModeEnum.HORIZONTAL &&
+                    !unref(getFullContent))
+            );
+        });
 
-    return () => {
-      return (
-        <Layout class="default-layout">
-          {() => (
-            <>
-              {renderFeatures()}
+        function renderFeatures() {
+            return (
+                <>
+                    <LayoutLockPage />
+                    {/* back top */}
+                    {unref(getUseOpenBackTop) && <BackTop target={() => document.body} />}
+                    {/* open setting drawer */}
+                    {unref(getShowSettingButton) && <SettingBtn />}
+                </>
+            );
+        }
 
-              {unref(getShowFullHeaderRef) && <LayoutHeader fixed={true} ref={headerRef} />}
-
-              <Layout>
-                {() => (
-                  <>
-                    {unref(showSideBarRef) && <LayoutSideBar />}
-                    <Layout class="default-layout__main">
-                      {() => (
+        return () => {
+            return (
+                <Layout class="default-layout">
+                    {() => (
                         <>
-                          <LayoutMultipleHeader />
-                          <LayoutContent />
-                          {unref(getShowLayoutFooter) && <LayoutFooter />}
+                            {renderFeatures()}
+
+                            {unref(getShowFullHeaderRef) && (
+                                <LayoutHeader fixed={true} ref={headerRef} />
+                            )}
+
+                            <Layout>
+                                {() => (
+                                    <>
+                                        {unref(showSideBarRef) && <LayoutSideBar />}
+                                        <Layout class="default-layout__main">
+                                            {() => (
+                                                <>
+                                                    <LayoutMultipleHeader />
+                                                    <LayoutContent />
+                                                    {unref(getShowLayoutFooter) && <LayoutFooter />}
+                                                </>
+                                            )}
+                                        </Layout>
+                                    </>
+                                )}
+                            </Layout>
                         </>
-                      )}
-                    </Layout>
-                  </>
-                )}
-              </Layout>
-            </>
-          )}
-        </Layout>
-      );
-    };
-  },
+                    )}
+                </Layout>
+            );
+        };
+    },
 });

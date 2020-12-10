@@ -2,12 +2,7 @@
 
 .layout-header {
     display: flex;
-    height: @header-height;
-    padding: 0 20px 0 0;
-    margin-left: -1px;
-    line-height: @header-height;
-    color: @white;
-    background: @white;
+    height: 100%;
     align-items: center;
     justify-content: space-between;
 
@@ -19,42 +14,48 @@
         width: 100%;
     }
 
-    &__left {
+    .layout-trigger {
         display: flex;
+        height: 100%;
+        padding: 1px 10px 0 16px;
+        cursor: pointer;
         align-items: center;
 
-        .layout-trigger {
-            padding: 1px 10px 0 16px;
-            cursor: pointer;
+        .anticon {
+            font-size: 17px;
+        }
 
-            .anticon {
-                font-size: 17px;
+        &.light {
+            &:hover {
+                background: @header-light-bg-hover-color;
             }
 
-            &.light {
-                &:hover {
-                    background: @header-light-bg-hover-color;
-                }
-
-                svg {
-                    fill: #000;
-                }
+            svg {
+                fill: #000;
             }
 
-            &.dark {
-                &:hover {
-                    background: @header-dark-bg-hover-color;
-                }
+            .layout-breadcrumb {
+                padding: 0 8px;
             }
         }
 
         .layout-breadcrumb {
+            display: flex;
             padding: 0 8px;
+            align-items: center;
+
+            .ant-breadcrumb-link {
+                .anticon {
+                    margin-right: 4px;
+                    margin-bottom: 2px;
+                }
+            }
         }
     }
 
     &__content {
         display: flex;
+        height: 100%;
         flex-grow: 1;
         align-items: center;
     }
@@ -69,6 +70,24 @@
             .ant-menu-submenu {
                 height: @header-height;
                 line-height: @header-height;
+            }
+        }
+
+        .layout-breadcrumb {
+            .ant-breadcrumb-link {
+                color: @breadcrumb-item-normal-color;
+
+                a {
+                    color: @text-color-base;
+
+                    &:hover {
+                        color: @primary-color;
+                    }
+                }
+            }
+
+            .ant-breadcrumb-separator {
+                color: @breadcrumb-item-normal-color;
             }
         }
 
@@ -174,9 +193,23 @@
         padding: 0 10px;
     }
 
-    &__bread {
-        display: none;
-        flex: 1;
+    .layout-breadcrumb {
+        .ant-breadcrumb-link {
+            color: rgba(255, 255, 255, 0.6);
+
+            a {
+                color: rgba(255, 255, 255, 0.8);
+
+                &:hover {
+                    color: @white;
+                }
+            }
+        }
+
+        .ant-breadcrumb-separator,
+        .anticon {
+            color: rgba(255, 255, 255, 0.8);
+        }
     }
 
     &__action {

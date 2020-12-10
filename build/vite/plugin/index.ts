@@ -42,32 +42,6 @@ export function createVitePlugins(viteEnv: ViteEnv) {
         })
     );
 
-    // vite-plugin-purge-icons
-    vitePlugins.push(PurgeIcons());
-
-    if (isProdFn() && VITE_USE_PWA) {
-        vitePlugins.push(
-            VitePWA({
-                manifest: {
-                    name: 'Admin',
-                    short_name: 'admin',
-                    icons: [
-                        {
-                            src: './resource/img/pwa-192x192.png',
-                            sizes: '192x192',
-                            type: 'image/png',
-                        },
-                        {
-                            src: './resource/img/pwa-512x512.png',
-                            sizes: '512x512',
-                            type: 'image/png',
-                        },
-                    ],
-                },
-            })
-        );
-    }
-
     // vite-plugin-mock
     if (isDevFn() && VITE_USE_MOCK) {
         // open mock
@@ -75,6 +49,7 @@ export function createVitePlugins(viteEnv: ViteEnv) {
             createMockServer({
                 ignore: /^\_/,
                 mockPath: 'mock',
+                showTime: true,
             })
         );
     }

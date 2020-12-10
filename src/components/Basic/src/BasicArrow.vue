@@ -1,5 +1,5 @@
 <!--
- * @Author: Admin
+ * @Author: Vben
  * @Description: Arrow component with animation
 -->
 <template>
@@ -11,7 +11,7 @@
     import { defineComponent, computed } from 'vue';
     import { RightOutlined } from '@ant-design/icons-vue';
     import { propTypes } from '/@/utils/propTypes';
-
+    import { useDesign } from '/@/hooks/web/useDesign';
     export default defineComponent({
         name: 'BasicArrow',
         components: { RightOutlined },
@@ -20,20 +20,22 @@
             expand: propTypes.bool,
             top: propTypes.bool,
             bottom: propTypes.bool,
+            inset: propTypes.bool,
         },
         setup(props) {
+            const { prefixCls } = useDesign('basic-arrow');
             const getClass = computed(() => {
-                const { expand, top, bottom } = props;
+                const { expand, top, bottom, inset } = props;
                 return [
-                    'base-arrow',
+                    prefixCls,
                     {
-                        'base-arrow__active': expand,
+                        [`${prefixCls}--active`]: expand,
                         top,
+                        inset,
                         bottom,
                     },
                 ];
             });
-
             return {
                 getClass,
             };
@@ -41,14 +43,20 @@
     });
 </script>
 <style lang="less" scoped>
-    .base-arrow {
+    @import (reference) '../../../design/index.less';
+    @prefix-cls: ~'@{namespace}-basic-arrow';
+    .@{prefix-cls} {
         display: inline-block;
         transform: rotate(0deg);
         transition: all 0.3s ease 0.1s;
         transform-origin: center center;
 
-        &__active {
+        &--active {
             transform: rotate(90deg);
+        }
+
+        &.inset {
+            line-height: 0px;
         }
 
         &.top {
@@ -58,12 +66,10 @@
         &.bottom {
             transform: rotate(90deg);
         }
-
-        &.top.base-arrow__active {
+        &.top.@{prefix-cls}--active {
             transform: rotate(90deg);
         }
-
-        &.bottom.base-arrow__active {
+        &.bottom.@{prefix-cls}--active {
             transform: rotate(-90deg);
         }
     }

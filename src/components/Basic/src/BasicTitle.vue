@@ -1,56 +1,62 @@
 <template>
-  <span class="base-title" :class="{ 'show-span': span && $slots.default }">
-    <slot />
-    <BasicHelp class="base-title__help" v-if="helpMessage" :text="helpMessage" />
-  </span>
+    <span :class="[prefixCls, { 'show-span': span && $slots.default }]">
+        <slot />
+        <BasicHelp :class="`${prefixCls}__help`" v-if="helpMessage" :text="helpMessage" />
+    </span>
 </template>
 <script lang="ts">
-  import type { PropType } from 'vue';
+    import type { PropType } from 'vue';
 
-  import { defineComponent } from 'vue';
+    import { defineComponent } from 'vue';
 
-  import BasicHelp from './BasicHelp.vue';
-  import { propTypes } from '/@/utils/propTypes';
+    import BasicHelp from './BasicHelp.vue';
+    import { propTypes } from '/@/utils/propTypes';
+    import { useDesign } from '/@/hooks/web/useDesign';
 
-  export default defineComponent({
-    name: 'BasicTitle',
-    components: { BasicHelp },
-    props: {
-      helpMessage: {
-        type: [String, Array] as PropType<string | string[]>,
-        default: '',
-      },
-      span: propTypes.bool,
-    },
-  });
+    export default defineComponent({
+        name: 'BasicTitle',
+        components: { BasicHelp },
+        props: {
+            helpMessage: {
+                type: [String, Array] as PropType<string | string[]>,
+                default: '',
+            },
+            span: propTypes.bool,
+        },
+        setup() {
+            const { prefixCls } = useDesign('basic-title');
+            return { prefixCls };
+        },
+    });
 </script>
 <style lang="less" scoped>
-  @import (reference) '../../../design/index.less';
+    @import (reference) '../../../design/index.less';
+    @prefix-cls: ~'@{namespace}-basic-title';
 
-  .base-title {
-    position: relative;
-    display: flex;
-    padding-left: 7px;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
-    color: @text-color-base;
+    .@{prefix-cls} {
+        position: relative;
+        display: flex;
+        padding-left: 7px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+        color: @text-color-base;
 
-    .unselect();
+        .unselect();
 
-    &.show-span::before {
-      position: absolute;
-      top: 4px;
-      left: 0;
-      width: 3px;
-      height: 16px;
-      margin-right: 4px;
-      background: @primary-color;
-      content: '';
+        &.show-span::before {
+            position: absolute;
+            top: 4px;
+            left: 0;
+            width: 3px;
+            height: 16px;
+            margin-right: 4px;
+            background: @primary-color;
+            content: '';
+        }
+
+        &__help {
+            margin-left: 10px;
+        }
     }
-
-    &__help {
-      margin-left: 10px;
-    }
-  }
 </style>

@@ -1,47 +1,47 @@
 <template>
-  <ConfigProvider
-    v-bind="lockEvent"
-    :locale="antConfigLocale"
-    :transform-cell-text="transformCellText"
-  >
-    <router-view />
-  </ConfigProvider>
+    <ConfigProvider
+        v-bind="lockEvent"
+        :locale="antConfigLocale"
+        :transform-cell-text="transformCellText"
+    >
+        <AppProvider>
+            <router-view />
+        </AppProvider>
+    </ConfigProvider>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { ConfigProvider } from 'ant-design-vue';
+    import { defineComponent } from 'vue';
+    import { ConfigProvider } from 'ant-design-vue';
 
-  import { getConfigProvider, initAppConfigStore } from '/@/setup/App';
+    import { getConfigProvider, initAppConfigStore } from '/@/setup/App';
 
-  import { useLockPage } from '/@/hooks/web/useLockPage';
-  import { useLocale } from '/@/hooks/web/useLocale';
-  import { createBreakpointListen } from '/@/hooks/event/useBreakpoint';
+    import { useLockPage } from '/@/hooks/web/useLockPage';
+    import { useLocale } from '/@/hooks/web/useLocale';
 
-  export default defineComponent({
-    name: 'App',
-    components: { ConfigProvider },
-    setup() {
-      // Initialize vuex internal system configuration
-      initAppConfigStore();
+    import { AppProvider } from '/@/components/Application';
 
-      // Create a global breakpoint monitor
-      createBreakpointListen();
+    export default defineComponent({
+        name: 'App',
+        components: { ConfigProvider, AppProvider },
+        setup() {
+            // Initialize vuex internal system configuration
+            initAppConfigStore();
 
-      // Get ConfigProvider configuration
-      const { transformCellText } = getConfigProvider();
+            // Get ConfigProvider configuration
+            const { transformCellText } = getConfigProvider();
 
-      // Create a lock screen monitor
-      const lockEvent = useLockPage();
+            // Create a lock screen monitor
+            const lockEvent = useLockPage();
 
-      // support Multi-language
-      const { antConfigLocale } = useLocale();
+            // support Multi-language
+            const { antConfigLocale } = useLocale();
 
-      return {
-        transformCellText,
-        antConfigLocale,
-        lockEvent,
-      };
-    },
-  });
+            return {
+                transformCellText,
+                antConfigLocale,
+                lockEvent,
+            };
+        },
+    });
 </script>

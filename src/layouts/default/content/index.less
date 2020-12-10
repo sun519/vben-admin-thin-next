@@ -1,25 +1,18 @@
 @import (reference) '../../../design/index.less';
 
 .layout-content {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
 
-  &.fixed {
-    width: 1200px;
-    margin: 0 auto;
-  }
-
-  &__loading {
-    position: absolute;
-    z-index: @page-loading-z-index;
-
-    &.fill {
-      background: rgba(240, 242, 245) !important;
+    &.fixed {
+        width: 1200px;
+        margin: 0 auto;
     }
 
-    > .basic-loading {
-      margin-bottom: 15%;
+    &__loading {
+        position: absolute;
+        top: 200px;
+        z-index: @page-loading-z-index;
     }
-  }
 }

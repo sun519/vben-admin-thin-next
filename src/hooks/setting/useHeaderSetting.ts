@@ -11,96 +11,98 @@ import { useFullContent } from '/@/hooks/web/useFullContent';
 
 import { MenuModeEnum } from '/@/enums/menuEnum';
 
-export function useHeaderSetting() {
-  const { getFullContent } = useFullContent();
-  const { getShowMultipleTab } = useMultipleTabSetting();
-  const {
+const { getFullContent } = useFullContent();
+const { getShowMultipleTab } = useMultipleTabSetting();
+const {
     getMenuMode,
     getSplit,
     getShowHeaderTrigger,
     getIsSidebarType,
     getIsTopMenu,
-  } = useMenuSetting();
-  const { getShowBreadCrumb, getShowLogo } = useRootSetting();
+} = useMenuSetting();
+const { getShowBreadCrumb, getShowLogo } = useRootSetting();
 
-  const getShowMixHeaderRef = computed(() => !unref(getIsSidebarType) && unref(getShowHeader));
+const getShowMixHeaderRef = computed(() => !unref(getIsSidebarType) && unref(getShowHeader));
 
-  const getShowFullHeaderRef = computed(() => {
+const getShowFullHeaderRef = computed(() => {
     return (
-      !unref(getFullContent) &&
-      unref(getShowMixHeaderRef) &&
-      unref(getShowHeader) &&
-      !unref(getIsTopMenu)
+        !unref(getFullContent) &&
+        unref(getShowMixHeaderRef) &&
+        unref(getShowHeader) &&
+        !unref(getIsTopMenu)
     );
-  });
+});
 
-  const getShowInsetHeaderRef = computed(() => {
+const getShowInsetHeaderRef = computed(() => {
     const need = !unref(getFullContent) && unref(getShowHeader);
     return (need && !unref(getShowMixHeaderRef)) || (need && unref(getIsTopMenu));
-  });
+});
 
-  // Get header configuration
-  const getHeaderSetting = computed(() => appStore.getProjectConfig.headerSetting);
+// Get header configuration
+const getHeaderSetting = computed(() => appStore.getProjectConfig.headerSetting);
 
-  const getShowDoc = computed(() => unref(getHeaderSetting).showDoc);
+const getShowDoc = computed(() => unref(getHeaderSetting).showDoc);
 
-  const getHeaderTheme = computed(() => unref(getHeaderSetting).theme);
+const getHeaderTheme = computed(() => unref(getHeaderSetting).theme);
 
-  const getShowHeader = computed(() => unref(getHeaderSetting).show);
+const getShowHeader = computed(() => unref(getHeaderSetting).show);
 
-  const getFixed = computed(() => unref(getHeaderSetting).fixed);
+const getFixed = computed(() => unref(getHeaderSetting).fixed);
 
-  const getHeaderBgColor = computed(() => unref(getHeaderSetting).bgColor);
+const getHeaderBgColor = computed(() => unref(getHeaderSetting).bgColor);
 
-  const getShowRedo = computed(() => unref(getHeaderSetting).showRedo && unref(getShowMultipleTab));
+const getShowRedo = computed(() => unref(getHeaderSetting).showRedo && unref(getShowMultipleTab));
 
-  const getUseLockPage = computed(() => unref(getHeaderSetting).useLockPage);
+const getUseLockPage = computed(() => unref(getHeaderSetting).useLockPage);
 
-  const getShowFullScreen = computed(() => unref(getHeaderSetting).showFullScreen);
+const getShowFullScreen = computed(() => unref(getHeaderSetting).showFullScreen);
 
-  const getShowNotice = computed(() => unref(getHeaderSetting).showNotice);
+const getShowNotice = computed(() => unref(getHeaderSetting).showNotice);
 
-  const getUnFixedAndFull = computed(() => !unref(getFixed) && !unref(getShowFullHeaderRef));
+const getUnFixedAndFull = computed(() => !unref(getFixed) && !unref(getShowFullHeaderRef));
 
-  const getShowBread = computed(() => {
+const getShowBread = computed(() => {
     return (
-      unref(getMenuMode) !== MenuModeEnum.HORIZONTAL && unref(getShowBreadCrumb) && !unref(getSplit)
+        unref(getMenuMode) !== MenuModeEnum.HORIZONTAL &&
+        unref(getShowBreadCrumb) &&
+        !unref(getSplit)
     );
-  });
+});
 
-  const getShowHeaderLogo = computed(() => {
+const getShowHeaderLogo = computed(() => {
     return unref(getShowLogo) && !unref(getIsSidebarType);
-  });
+});
 
-  const getShowContent = computed(() => {
+const getShowContent = computed(() => {
     return unref(getShowBread) || unref(getShowHeaderTrigger);
-  });
+});
 
-  // Set header configuration
-  function setHeaderSetting(headerSetting: Partial<HeaderSetting>): void {
+// Set header configuration
+function setHeaderSetting(headerSetting: Partial<HeaderSetting>): void {
     appStore.commitProjectConfigState({ headerSetting });
-  }
+}
 
-  return {
-    setHeaderSetting,
+export function useHeaderSetting() {
+    return {
+        setHeaderSetting,
 
-    getHeaderSetting,
+        getHeaderSetting,
 
-    getShowDoc,
-    getHeaderTheme,
-    getShowRedo,
-    getUseLockPage,
-    getShowFullScreen,
-    getShowNotice,
-    getShowBread,
-    getShowContent,
-    getShowHeaderLogo,
-    getShowHeader,
-    getFixed,
-    getShowMixHeaderRef,
-    getShowFullHeaderRef,
-    getShowInsetHeaderRef,
-    getUnFixedAndFull,
-    getHeaderBgColor,
-  };
+        getShowDoc,
+        getHeaderTheme,
+        getShowRedo,
+        getUseLockPage,
+        getShowFullScreen,
+        getShowNotice,
+        getShowBread,
+        getShowContent,
+        getShowHeaderLogo,
+        getShowHeader,
+        getFixed,
+        getShowMixHeaderRef,
+        getShowFullHeaderRef,
+        getShowInsetHeaderRef,
+        getUnFixedAndFull,
+        getHeaderBgColor,
+    };
 }

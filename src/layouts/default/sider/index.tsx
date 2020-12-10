@@ -13,140 +13,142 @@ import { useTrigger, useDragLine, useSiderEvent } from './useLayoutSider';
 import { useLayoutContext } from '../useLayoutContext';
 
 export default defineComponent({
-  name: 'LayoutSideBar',
-  setup() {
-    const topRef = ref(0);
-    const dragBarRef = ref<ElRef>(null);
-    const sideRef = ref<ElRef>(null);
+    name: 'LayoutSideBar',
+    setup() {
+        const topRef = ref(0);
+        const dragBarRef = ref<ElRef>(null);
+        const sideRef = ref<ElRef>(null);
 
-    const {
-      getCollapsed,
-      getMenuWidth,
-      getSplit,
-      getMenuTheme,
-      getRealWidth,
-      getMenuHidden,
-      getMenuFixed,
-    } = useMenuSetting();
+        const {
+            getCollapsed,
+            getMenuWidth,
+            getSplit,
+            getMenuTheme,
+            getRealWidth,
+            getMenuHidden,
+            getMenuFixed,
+        } = useMenuSetting();
 
-    const { getShowFullHeaderRef, getUnFixedAndFull } = useHeaderSetting();
+        const { getShowFullHeaderRef, getUnFixedAndFull } = useHeaderSetting();
 
-    const injectValue = useLayoutContext();
+        const injectValue = useLayoutContext();
 
-    const { getTriggerAttr, getTriggerSlot } = useTrigger();
+        const { getTriggerAttr, getTriggerSlot } = useTrigger();
 
-    const { renderDragLine } = useDragLine(sideRef, dragBarRef);
+        const { renderDragLine } = useDragLine(sideRef, dragBarRef);
 
-    const {
-      getCollapsedWidth,
-      onBreakpointChange,
-      onCollapseChange,
-      onSiderClick,
-    } = useSiderEvent();
+        const {
+            getCollapsedWidth,
+            onBreakpointChange,
+            onCollapseChange,
+            onSiderClick,
+        } = useSiderEvent();
 
-    const getMode = computed(() => {
-      return unref(getSplit) ? MenuModeEnum.INLINE : null;
-    });
-
-    const getSplitType = computed(() => {
-      return unref(getSplit) ? MenuSplitTyeEnum.LEFT : MenuSplitTyeEnum.NONE;
-    });
-
-    const showClassSideBarRef = computed(() => {
-      return unref(getSplit) ? unref(getMenuHidden) : true;
-    });
-
-    const getSiderClass = computed(() => {
-      return {
-        'layout-sidebar': true,
-        fixed: unref(getMenuFixed),
-        hidden: !unref(showClassSideBarRef),
-      };
-    });
-
-    const getSiderStyle = computed(() => {
-      const top = `${unref(topRef)}px`;
-      if (!unref(getMenuFixed)) {
-        return { top };
-      }
-      return {
-        top,
-        height: `calc(100% - ${top})`,
-      };
-    });
-
-    watch(
-      () => getShowFullHeaderRef.value,
-      () => {
-        topRef.value = 0;
-        if (unref(getUnFixedAndFull)) return;
-        nextTick(() => {
-          const fullHeaderEl = unref(injectValue.fullHeaderRef)?.$el;
-          if (!fullHeaderEl) return;
-          topRef.value = fullHeaderEl.offsetHeight;
+        const getMode = computed(() => {
+            return unref(getSplit) ? MenuModeEnum.INLINE : null;
         });
-      },
-      {
-        immediate: true,
-      }
-    );
 
-    const getHiddenDomStyle = computed(
-      (): CSSProperties => {
-        const width = `${unref(getRealWidth)}px`;
-        return {
-          width: width,
-          overflow: 'hidden',
-          flex: `0 0 ${width}`,
-          maxWidth: width,
-          minWidth: width,
-          transition: 'all 0.2s',
+        const getSplitType = computed(() => {
+            return unref(getSplit) ? MenuSplitTyeEnum.LEFT : MenuSplitTyeEnum.NONE;
+        });
+
+        const showClassSideBarRef = computed(() => {
+            return unref(getSplit) ? unref(getMenuHidden) : true;
+        });
+
+        const getSiderClass = computed(() => {
+            return {
+                'layout-sidebar': true,
+                fixed: unref(getMenuFixed),
+                hidden: !unref(showClassSideBarRef),
+            };
+        });
+
+        const getSiderStyle = computed(() => {
+            const top = `${unref(topRef)}px`;
+            if (!unref(getMenuFixed)) {
+                return { top };
+            }
+            return {
+                top,
+                height: `calc(100% - ${top})`,
+            };
+        });
+
+        watch(
+            () => getShowFullHeaderRef.value,
+            () => {
+                topRef.value = 0;
+                if (unref(getUnFixedAndFull)) return;
+                nextTick(() => {
+                    const fullHeaderEl = unref(injectValue.fullHeader)?.$el;
+                    if (!fullHeaderEl) return;
+                    topRef.value = fullHeaderEl.offsetHeight;
+                });
+            },
+            {
+                immediate: true,
+            }
+        );
+
+        const getHiddenDomStyle = computed(
+            (): CSSProperties => {
+                const width = `${unref(getRealWidth)}px`;
+                return {
+                    width: width,
+                    overflow: 'hidden',
+                    flex: `0 0 ${width}`,
+                    maxWidth: width,
+                    minWidth: width,
+                    transition: 'all 0.15s',
+                };
+            }
+        );
+
+        function renderDefault() {
+            return (
+                <>
+                    <LayoutMenu
+                        theme={unref(getMenuTheme)}
+                        menuMode={unref(getMode)}
+                        splitType={unref(getSplitType)}
+                    />
+                    {renderDragLine()}
+                </>
+            );
+        }
+
+        return () => {
+            return (
+                <>
+                    {unref(getMenuFixed) && !unref(injectValue.isMobile) && (
+                        <div
+                            style={unref(getHiddenDomStyle)}
+                            class={{ hidden: !unref(showClassSideBarRef) }}
+                        />
+                    )}
+                    <Layout.Sider
+                        ref={sideRef}
+                        breakpoint="lg"
+                        collapsible
+                        class={unref(getSiderClass)}
+                        style={unref(getSiderStyle)}
+                        width={unref(getMenuWidth)}
+                        collapsed={unref(getCollapsed)}
+                        collapsedWidth={unref(getCollapsedWidth)}
+                        theme={unref(getMenuTheme)}
+                        onClick={onSiderClick}
+                        onCollapse={onCollapseChange}
+                        onBreakpoint={onBreakpointChange}
+                        {...unref(getTriggerAttr)}
+                    >
+                        {{
+                            ...unref(getTriggerSlot),
+                            default: () => renderDefault(),
+                        }}
+                    </Layout.Sider>
+                </>
+            );
         };
-      }
-    );
-
-    function renderDefault() {
-      return (
-        <>
-          <LayoutMenu
-            theme={unref(getMenuTheme)}
-            menuMode={unref(getMode)}
-            splitType={unref(getSplitType)}
-          />
-          {renderDragLine()}
-        </>
-      );
-    }
-
-    return () => {
-      return (
-        <>
-          {unref(getMenuFixed) && (
-            <div style={unref(getHiddenDomStyle)} class={{ hidden: !unref(showClassSideBarRef) }} />
-          )}
-
-          <Layout.Sider
-            ref={sideRef}
-            breakpoint="md"
-            collapsible
-            class={unref(getSiderClass)}
-            style={unref(getSiderStyle)}
-            width={unref(getMenuWidth)}
-            collapsed={unref(getCollapsed)}
-            collapsedWidth={unref(getCollapsedWidth)}
-            theme={unref(getMenuTheme)}
-            onClick={onSiderClick}
-            onCollapse={onCollapseChange}
-            onBreakpoint={onBreakpointChange}
-            {...unref(getTriggerAttr)}
-          >
-            {{
-              ...unref(getTriggerSlot),
-              default: () => renderDefault(),
-            }}
-          </Layout.Sider>
-        </>
-      );
-    };
-  },
+    },
 });

@@ -6,69 +6,73 @@ import { appStore } from '/@/store/modules/app';
 import { ContentEnum } from '/@/enums/appEnum';
 
 type RootSetting = Omit<
-  ProjectConfig,
-  'locale' | 'headerSetting' | 'menuSetting' | 'multiTabsSetting'
+    ProjectConfig,
+    'locale' | 'headerSetting' | 'menuSetting' | 'multiTabsSetting'
 >;
-export function useRootSetting() {
-  const getRootSetting = computed((): RootSetting => appStore.getProjectConfig);
 
-  const getPageLoading = computed(() => appStore.getPageLoading);
+const getRootSetting = computed((): RootSetting => appStore.getProjectConfig);
 
-  const getOpenKeepAlive = computed(() => unref(getRootSetting).openKeepAlive);
+const getPageLoading = computed(() => appStore.getPageLoading);
 
-  const getCanEmbedIFramePage = computed(() => unref(getRootSetting).canEmbedIFramePage);
+const getOpenKeepAlive = computed(() => unref(getRootSetting).openKeepAlive);
 
-  const getPermissionMode = computed(() => unref(getRootSetting).permissionMode);
+const getCanEmbedIFramePage = computed(() => unref(getRootSetting).canEmbedIFramePage);
 
-  const getShowLogo = computed(() => unref(getRootSetting).showLogo);
+const getPermissionMode = computed(() => unref(getRootSetting).permissionMode);
 
-  const getContentMode = computed(() => unref(getRootSetting).contentMode);
+const getShowLogo = computed(() => unref(getRootSetting).showLogo);
 
-  const getUseOpenBackTop = computed(() => unref(getRootSetting).useOpenBackTop);
+const getContentMode = computed(() => unref(getRootSetting).contentMode);
 
-  const getShowSettingButton = computed(() => unref(getRootSetting).showSettingButton);
+const getUseOpenBackTop = computed(() => unref(getRootSetting).useOpenBackTop);
 
-  const getUseErrorHandle = computed(() => unref(getRootSetting).useErrorHandle);
+const getShowSettingButton = computed(() => unref(getRootSetting).showSettingButton);
 
-  const getShowFooter = computed(() => unref(getRootSetting).showFooter);
+const getUseErrorHandle = computed(() => unref(getRootSetting).useErrorHandle);
 
-  const getShowBreadCrumb = computed(() => unref(getRootSetting).showBreadCrumb);
+const getShowFooter = computed(() => unref(getRootSetting).showFooter);
 
-  const getShowBreadCrumbIcon = computed(() => unref(getRootSetting).showBreadCrumbIcon);
+const getShowBreadCrumb = computed(() => unref(getRootSetting).showBreadCrumb);
 
-  const getFullContent = computed(() => unref(getRootSetting).fullContent);
+const getShowBreadCrumbIcon = computed(() => unref(getRootSetting).showBreadCrumbIcon);
 
-  const getColorWeak = computed(() => unref(getRootSetting).colorWeak);
+const getFullContent = computed(() => unref(getRootSetting).fullContent);
 
-  const getGrayMode = computed(() => unref(getRootSetting).grayMode);
+const getColorWeak = computed(() => unref(getRootSetting).colorWeak);
 
-  const getLayoutContentMode = computed(() =>
+const getGrayMode = computed(() => unref(getRootSetting).grayMode);
+
+const getLockTime = computed(() => unref(getRootSetting).lockTime);
+
+const getLayoutContentMode = computed(() =>
     unref(getRootSetting).contentMode === ContentEnum.FULL ? ContentEnum.FULL : ContentEnum.FIXED
-  );
+);
 
-  function setRootSetting(setting: Partial<RootSetting>) {
+function setRootSetting(setting: Partial<RootSetting>) {
     appStore.commitProjectConfigState(setting);
-  }
+}
 
-  return {
-    setRootSetting,
+export function useRootSetting() {
+    return {
+        setRootSetting,
 
-    getFullContent,
-    getColorWeak,
-    getGrayMode,
-    getRootSetting,
-    getLayoutContentMode,
-    getPageLoading,
-    getOpenKeepAlive,
-    getCanEmbedIFramePage,
-    getPermissionMode,
-    getShowLogo,
-    getUseErrorHandle,
-    getShowBreadCrumb,
-    getShowBreadCrumbIcon,
-    getUseOpenBackTop,
-    getShowSettingButton,
-    getShowFooter,
-    getContentMode,
-  };
+        getFullContent,
+        getColorWeak,
+        getGrayMode,
+        getRootSetting,
+        getLayoutContentMode,
+        getPageLoading,
+        getOpenKeepAlive,
+        getCanEmbedIFramePage,
+        getPermissionMode,
+        getShowLogo,
+        getUseErrorHandle,
+        getShowBreadCrumb,
+        getShowBreadCrumbIcon,
+        getUseOpenBackTop,
+        getShowSettingButton,
+        getShowFooter,
+        getContentMode,
+        getLockTime,
+    };
 }

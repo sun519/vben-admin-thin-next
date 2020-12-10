@@ -1,84 +1,95 @@
+<!--
+ * @Author: Vben
+ * @Description: Multi-language switching component
+-->
 <template>
-  <Dropdown
-    :trigger="['click']"
-    :dropMenuList="localeList"
-    :selectedKeys="selectedKeys"
-    @menuEvent="handleMenuEvent"
-    overlayClassName="app-locale-picker-overlay"
-  >
-    <span class="app-local-picker">
-      <GlobalOutlined class="app-local-picker__icon" />
-      <span v-if="showText">{{ getLangText }}</span>
-    </span>
-  </Dropdown>
+    <Dropdown
+        :trigger="['click']"
+        :dropMenuList="localeList"
+        :selectedKeys="selectedKeys"
+        @menuEvent="handleMenuEvent"
+        :overlayClassName="`${prefixCls}-overlay`"
+    >
+        <span :class="prefixCls">
+            <GlobalOutlined :class="`${prefixCls}__icon`" />
+            <span v-if="showText">{{ getLangText }}</span>
+        </span>
+    </Dropdown>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, watchEffect, unref, computed } from 'vue';
+    import { defineComponent, ref, watchEffect, unref, computed } from 'vue';
 
-  import { Dropdown, DropMenu } from '/@/components/Dropdown';
-  import { GlobalOutlined } from '@ant-design/icons-vue';
+    import { Dropdown, DropMenu } from '/@/components/Dropdown';
+    import { GlobalOutlined } from '@ant-design/icons-vue';
 
-  import { useLocale } from '/@/hooks/web/useLocale';
-  import { useLocaleSetting } from '/@/hooks/setting/useLocaleSetting';
+    import { useLocale } from '/@/hooks/web/useLocale';
+    import { useLocaleSetting } from '/@/hooks/setting/useLocaleSetting';
 
-  import { LocaleType } from '/@/locales/types';
+    import { LocaleType } from '/@/locales/types';
 
-  import { propTypes } from '/@/utils/propTypes';
+    import { propTypes } from '/@/utils/propTypes';
+    import { useDesign } from '/@/hooks/web/useDesign';
 
-  export default defineComponent({
-    name: 'AppLocalPicker',
-    components: { GlobalOutlined, Dropdown },
-    props: {
-      // Whether to display text
-      showText: propTypes.bool.def(true),
-      // Whether to refresh the interface when changing
-      reload: propTypes.bool,
-    },
-    setup(props) {
-      const { localeList } = useLocaleSetting();
-      const selectedKeys = ref<string[]>([]);
+    export default defineComponent({
+        name: 'AppLocalPicker',
+        components: { GlobalOutlined, Dropdown },
+        props: {
+            // Whether to display text
+            showText: propTypes.bool.def(true),
+            // Whether to refresh the interface when changing
+            reload: propTypes.bool,
+        },
+        setup(props) {
+            const selectedKeys = ref<string[]>([]);
 
-      const { changeLocale, getLang } = useLocale();
+            const { prefixCls } = useDesign('app-locale-picker');
 
-      const getLangText = computed(() => {
-        const key = selectedKeys.value[0];
-        if (!key) return '';
-        return localeList.find((item) => item.event === key)?.text;
-      });
+            const { localeList } = useLocaleSetting();
 
-      watchEffect(() => {
-        selectedKeys.value = [unref(getLang)];
-      });
+            const { changeLocale, getLang } = useLocale();
 
-      function toggleLocale(lang: LocaleType | string) {
-        changeLocale(lang as LocaleType);
-        selectedKeys.value = [lang as string];
-        props.reload && location.reload();
-      }
+            const getLangText = computed(() => {
+                const key = selectedKeys.value[0];
+                if (!key) return '';
+                return localeList.find((item) => item.event === key)?.text;
+            });
 
-      function handleMenuEvent(menu: DropMenu) {
-        toggleLocale(menu.event as string);
-      }
+            watchEffect(() => {
+                selectedKeys.value = [unref(getLang)];
+            });
 
-      return { localeList, handleMenuEvent, selectedKeys, getLangText };
-    },
-  });
+            function toggleLocale(lang: LocaleType | string) {
+                changeLocale(lang as LocaleType);
+                selectedKeys.value = [lang as string];
+                props.reload && location.reload();
+            }
+
+            function handleMenuEvent(menu: DropMenu) {
+                toggleLocale(menu.event as string);
+            }
+
+            return { localeList, handleMenuEvent, selectedKeys, getLangText, prefixCls };
+        },
+    });
 </script>
 
-<style lang="less">
-  .app-locale-picker-overlay {
-    .ant-dropdown-menu-item {
-      min-width: 160px;
-    }
-  }
+<style lang="less" scoped>
+    @import (reference) '../../../design/index.less';
+    @prefix-cls: ~'@{namespace}-app-locale-picker';
 
-  .app-local-picker {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    &__icon {
-      margin-right: 4px;
+    :global(.@{prefix-cls}-overlay) {
+        .ant-dropdown-menu-item {
+            min-width: 160px;
+        }
     }
-  }
+
+    .@{prefix-cls} {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &__icon {
+            margin-right: 4px;
+        }
+    }
 </style>

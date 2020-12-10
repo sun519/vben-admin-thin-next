@@ -7,7 +7,7 @@ import { defineComponent, ref, computed, watchEffect, watch, unref, nextTick, to
 import { Drawer, Row, Col, Button } from 'ant-design-vue';
 
 import { BasicTitle } from '/@/components/Basic';
-import { FullLoading } from '/@/components/Loading/index';
+import { Loading } from '/@/components/Loading';
 import { LeftOutlined } from '@ant-design/icons-vue';
 
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -21,224 +21,231 @@ import { basicProps } from './props';
 
 const prefixCls = 'basic-drawer';
 export default defineComponent({
-  inheritAttrs: false,
-  props: basicProps,
-  emits: ['visible-change', 'ok', 'close', 'register'],
-  setup(props, { slots, emit, attrs }) {
-    const scrollRef = ref<ElRef>(null);
-    const visibleRef = ref(false);
-    const propsRef = ref<Partial<Nullable<DrawerProps>>>(null);
+    inheritAttrs: false,
+    props: basicProps,
+    emits: ['visible-change', 'ok', 'close', 'register'],
+    setup(props, { slots, emit, attrs }) {
+        const scrollRef = ref<ElRef>(null);
+        const visibleRef = ref(false);
+        const propsRef = ref<Partial<Nullable<DrawerProps>>>(null);
 
-    const { t } = useI18n('component.drawer');
+        const { t } = useI18n();
 
-    const getMergeProps = computed(
-      (): DrawerProps => {
-        return deepMerge(toRaw(props), unref(propsRef));
-      }
-    );
+        const getMergeProps = computed(
+            (): DrawerProps => {
+                return deepMerge(toRaw(props), unref(propsRef));
+            }
+        );
 
-    const getProps = computed(
-      (): DrawerProps => {
-        const opt = {
-          placement: 'right',
-          ...attrs,
-          ...unref(getMergeProps),
-          visible: unref(visibleRef),
-        };
-        opt.title = undefined;
-        const { isDetail, width, wrapClassName, getContainer } = opt;
-        if (isDetail) {
-          if (!width) {
-            opt.width = '100%';
-          }
-          const detailCls = `${prefixCls}__detail`;
+        const getProps = computed(
+            (): DrawerProps => {
+                const opt = {
+                    placement: 'right',
+                    ...attrs,
+                    ...unref(getMergeProps),
+                    visible: unref(visibleRef),
+                };
+                opt.title = undefined;
+                const { isDetail, width, wrapClassName, getContainer } = opt;
+                if (isDetail) {
+                    if (!width) {
+                        opt.width = '100%';
+                    }
+                    const detailCls = `${prefixCls}__detail`;
 
-          opt.wrapClassName = wrapClassName ? `${wrapClassName} ${detailCls}` : detailCls;
+                    opt.wrapClassName = wrapClassName ? `${wrapClassName} ${detailCls}` : detailCls;
 
-          if (!getContainer) {
-            // TODO type error?
-            opt.getContainer = '.layout-content' as any;
-          }
-        }
-        return opt as DrawerProps;
-      }
-    );
+                    if (!getContainer) {
+                        // TODO type error?
+                        opt.getContainer = '.layout-content' as any;
+                    }
+                }
+                return opt as DrawerProps;
+            }
+        );
 
-    const getBindValues = computed(
-      (): DrawerProps => {
-        return {
-          ...attrs,
-          ...unref(getProps),
-        };
-      }
-    );
+        const getBindValues = computed(
+            (): DrawerProps => {
+                return {
+                    ...attrs,
+                    ...unref(getProps),
+                };
+            }
+        );
 
-    // Custom implementation of the bottom button,
-    const getFooterHeight = computed(() => {
-      const { footerHeight, showFooter } = unref(getProps);
+        // Custom implementation of the bottom button,
+        const getFooterHeight = computed(() => {
+            const { footerHeight, showFooter } = unref(getProps);
 
-      if (showFooter && footerHeight) {
-        return isNumber(footerHeight) ? `${footerHeight}px` : `${footerHeight.replace('px', '')}px`;
-      }
-      return `0px`;
-    });
-
-    const getScrollContentStyle = computed(
-      (): CSSProperties => {
-        const footerHeight = unref(getFooterHeight);
-        return {
-          position: 'relative',
-          height: `calc(100% - ${footerHeight})`,
-          overflow: 'auto',
-          padding: '16px',
-          paddingBottom: '30px',
-        };
-      }
-    );
-
-    const getLoading = computed(() => {
-      return {
-        hidden: !unref(getProps).loading,
-      };
-    });
-
-    watchEffect(() => {
-      visibleRef.value = props.visible;
-    });
-
-    watch(
-      () => visibleRef.value,
-      (visible) => {
-        nextTick(() => {
-          emit('visible-change', visible);
+            if (showFooter && footerHeight) {
+                return isNumber(footerHeight)
+                    ? `${footerHeight}px`
+                    : `${footerHeight.replace('px', '')}px`;
+            }
+            return `0px`;
         });
-      },
-      {
-        immediate: false,
-      }
-    );
 
-    // Cancel event
-    async function onClose(e: ChangeEvent) {
-      const { closeFunc } = unref(getProps);
-      emit('close', e);
-      if (closeFunc && isFunction(closeFunc)) {
-        const res = await closeFunc();
-        visibleRef.value = !res;
-        return;
-      }
-      visibleRef.value = false;
-    }
+        const getScrollContentStyle = computed(
+            (): CSSProperties => {
+                const footerHeight = unref(getFooterHeight);
+                return {
+                    position: 'relative',
+                    height: `calc(100% - ${footerHeight})`,
+                    overflow: 'auto',
+                    padding: '16px',
+                    paddingBottom: '30px',
+                };
+            }
+        );
 
-    function setDrawerProps(props: Partial<DrawerProps>): void {
-      // Keep the last setDrawerProps
-      propsRef.value = deepMerge(unref(propsRef) || {}, props);
+        const getLoading = computed(() => {
+            return !!unref(getProps)?.loading;
+        });
 
-      if (Reflect.has(props, 'visible')) {
-        visibleRef.value = !!props.visible;
-      }
-    }
+        watchEffect(() => {
+            visibleRef.value = props.visible;
+        });
 
-    function renderFooter() {
-      if (slots?.footer) {
-        return getSlot(slots, 'footer');
-      }
-      const {
-        showCancelBtn,
-        cancelButtonProps,
-        cancelText,
-        showOkBtn,
-        okType,
-        okText,
-        okButtonProps,
-        confirmLoading,
-        showFooter,
-      } = unref(getProps);
-      if (!showFooter) {
-        return null;
-      }
+        watch(
+            () => visibleRef.value,
+            (visible) => {
+                nextTick(() => {
+                    emit('visible-change', visible);
+                });
+            },
+            {
+                immediate: false,
+            }
+        );
 
-      return (
-        <div class={`${prefixCls}__footer`}>
-          {getSlot(slots, 'insertFooter')}
-          {showCancelBtn && (
-            <Button {...cancelButtonProps} onClick={onClose} class="mr-2">
-              {() => cancelText}
-            </Button>
-          )}
-          {getSlot(slots, 'centerFooter')}
-          {showOkBtn && (
-            <Button
-              type={okType}
-              onClick={() => {
-                emit('ok');
-              }}
-              {...okButtonProps}
-              loading={confirmLoading}
-            >
-              {() => okText}
-            </Button>
-          )}
-          {getSlot(slots, 'appendFooter')}
-        </div>
-      );
-    }
+        // Cancel event
+        async function onClose(e: ChangeEvent) {
+            const { closeFunc } = unref(getProps);
+            emit('close', e);
+            if (closeFunc && isFunction(closeFunc)) {
+                const res = await closeFunc();
+                visibleRef.value = !res;
+                return;
+            }
+            visibleRef.value = false;
+        }
 
-    function renderHeader() {
-      if (slots?.title) {
-        return getSlot(slots, 'title');
-      }
-      const { title } = unref(getMergeProps);
+        function setDrawerProps(props: Partial<DrawerProps>): void {
+            // Keep the last setDrawerProps
+            propsRef.value = deepMerge(unref(propsRef) || {}, props);
 
-      if (!props.isDetail) {
-        return <BasicTitle>{() => title || getSlot(slots, 'title')}</BasicTitle>;
-      }
-      return (
-        <Row type="flex" align="middle" class={`${prefixCls}__detail-header`}>
-          {() => (
-            <>
-              {props.showDetailBack && (
-                <Button size="small" type="link" onClick={onClose}>
-                  {() => <LeftOutlined />}
-                </Button>
-              )}
-              {title && (
-                <Col style="flex:1" class={[`${prefixCls}__detail-title`, 'ellipsis', 'px-2']}>
-                  {() => title}
-                </Col>
-              )}
-              {getSlot(slots, 'titleToolbar')}
-            </>
-          )}
-        </Row>
-      );
-    }
+            if (Reflect.has(props, 'visible')) {
+                visibleRef.value = !!props.visible;
+            }
+        }
 
-    const drawerInstance: DrawerInstance = {
-      setDrawerProps: setDrawerProps,
-    };
+        function renderFooter() {
+            if (slots?.footer) {
+                return getSlot(slots, 'footer');
+            }
+            const {
+                showCancelBtn,
+                cancelButtonProps,
+                cancelText,
+                showOkBtn,
+                okType,
+                okText,
+                okButtonProps,
+                confirmLoading,
+                showFooter,
+            } = unref(getProps);
+            if (!showFooter) {
+                return null;
+            }
 
-    tryTsxEmit((instance) => {
-      emit('register', drawerInstance, instance.uid);
-    });
-
-    return () => {
-      return (
-        <Drawer class={prefixCls} onClose={onClose} {...unref(getBindValues)}>
-          {{
-            title: () => renderHeader(),
-            default: () => (
-              <>
-                <div ref={scrollRef} style={unref(getScrollContentStyle)}>
-                  <FullLoading absolute tip={t('loadingText')} class={unref(getLoading)} />
-                  {getSlot(slots)}
+            return (
+                <div class={`${prefixCls}__footer`}>
+                    {getSlot(slots, 'insertFooter')}
+                    {showCancelBtn && (
+                        <Button {...cancelButtonProps} onClick={onClose} class="mr-2">
+                            {() => cancelText}
+                        </Button>
+                    )}
+                    {getSlot(slots, 'centerFooter')}
+                    {showOkBtn && (
+                        <Button
+                            type={okType}
+                            onClick={() => {
+                                emit('ok');
+                            }}
+                            {...okButtonProps}
+                            loading={confirmLoading}
+                        >
+                            {() => okText}
+                        </Button>
+                    )}
+                    {getSlot(slots, 'appendFooter')}
                 </div>
-                {renderFooter()}
-              </>
-            ),
-          }}
-        </Drawer>
-      );
-    };
-  },
+            );
+        }
+
+        function renderHeader() {
+            if (slots?.title) {
+                return getSlot(slots, 'title');
+            }
+            const { title } = unref(getMergeProps);
+
+            if (!props.isDetail) {
+                return <BasicTitle>{() => title || getSlot(slots, 'title')}</BasicTitle>;
+            }
+            return (
+                <Row type="flex" align="middle" class={`${prefixCls}__detail-header`}>
+                    {() => (
+                        <>
+                            {props.showDetailBack && (
+                                <Button size="small" type="link" onClick={onClose}>
+                                    {() => <LeftOutlined />}
+                                </Button>
+                            )}
+                            {title && (
+                                <Col
+                                    style="flex:1"
+                                    class={[`${prefixCls}__detail-title`, 'ellipsis', 'px-2']}
+                                >
+                                    {() => title}
+                                </Col>
+                            )}
+                            {getSlot(slots, 'titleToolbar')}
+                        </>
+                    )}
+                </Row>
+            );
+        }
+
+        const drawerInstance: DrawerInstance = {
+            setDrawerProps: setDrawerProps,
+        };
+
+        tryTsxEmit((instance) => {
+            emit('register', drawerInstance, instance.uid);
+        });
+
+        return () => {
+            return (
+                <Drawer class={prefixCls} onClose={onClose} {...unref(getBindValues)}>
+                    {{
+                        title: () => renderHeader(),
+                        default: () => (
+                            <>
+                                <div ref={scrollRef} style={unref(getScrollContentStyle)}>
+                                    <Loading
+                                        absolute
+                                        tip={t('component.drawer.loadingText')}
+                                        loading={unref(getLoading)}
+                                    />
+                                    {getSlot(slots)}
+                                </div>
+                                {renderFooter()}
+                            </>
+                        ),
+                    }}
+                </Drawer>
+            );
+        };
+    },
 });
