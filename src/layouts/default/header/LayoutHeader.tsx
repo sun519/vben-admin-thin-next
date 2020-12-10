@@ -227,11 +227,12 @@ export default defineComponent({
                         </TooltipItem>
                     )}
 
+                    {/* 隐藏锁屏功能
                     {unref(getUseLockPage) && unref(isPc) && (
                         <TooltipItem title={t('layout.header.tooltipLock')}>
                             {() => renderActionDefault(LockOutlined, handleLockPage)}
                         </TooltipItem>
-                    )}
+                    )} */}
 
                     {unref(getShowNotice) && unref(isPc) && (
                         <TooltipItem title={t('layout.header.tooltipNotify')}>
@@ -264,13 +265,14 @@ export default defineComponent({
                         </TooltipItem>
                     )}
                     <UserDropdown class="layout-header__user-dropdown" />
+                    {/* 隐藏国际化图标
                     {unref(getShowLocale) && (
                         <AppLocalePicker
                             reload={true}
                             showText={false}
                             class="layout-header__action-item locale"
                         />
-                    )}
+                    )} */}
                 </div>
             );
         }

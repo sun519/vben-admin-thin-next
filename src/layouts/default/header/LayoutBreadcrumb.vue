@@ -2,6 +2,7 @@
   <div class="layout-breadcrumb">
     <a-breadcrumb :routes="routes">
       <template #itemRender="{ route, routes }">
+          <!-- <div>{{ routes }}</div> -->
         <Icon :icon="route.meta.icon" v-if="showIcon && route.meta.icon" />
         <span v-if="routes.indexOf(route) === routes.length - 1">
           {{ t(route.meta.title) }}

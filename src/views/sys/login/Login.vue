@@ -3,66 +3,40 @@
         <div class="login-mask" />
         <div class="login-form-wrap">
             <div class="login-form mx-6">
-                <AppLocalePicker v-if="showLocale" class="login-form__locale" />
+                <!-- <AppLocalePicker v-if="showLocale" class="login-form__locale" /> -->
                 <div class="login-form__content px-2 py-10">
                     <header>
                         <img :src="logo" class="mr-4" />
                         <h1>{{ title }}</h1>
                     </header>
 
-                    <a-form
-                        class="mx-auto mt-10"
-                        :model="formData"
-                        :rules="formRules"
-                        ref="formRef"
-                    >
+                    <a-form class="mx-auto mt-10" :model="formData" :rules="formRules" ref="formRef">
                         <a-form-item name="account">
-                            <a-input
-                                size="large"
-                                v-model:value="formData.account"
-                                placeholder="username: vben"
-                            />
+                            <a-input size="large" v-model:value="formData.account" placeholder="username: vben" />
                         </a-form-item>
                         <a-form-item name="password">
-                            <a-input-password
-                                size="large"
-                                visibilityToggle
-                                v-model:value="formData.password"
-                                placeholder="password: 123456"
-                            />
+                            <a-input-password size="large" visibilityToggle v-model:value="formData.password" placeholder="password: 123456"/>
                         </a-form-item>
 
                         <!-- <a-form-item name="verify" v-if="openLoginVerify">
-              <BasicDragVerify v-model:value="formData.verify" ref="verifyRef" />
-            </a-form-item> -->
+                            <BasicDragVerify v-model:value="formData.verify" ref="verifyRef" />
+                        </a-form-item> -->
                         <a-row>
                             <a-col :span="12">
                                 <a-form-item>
                                     <!-- No logic, you need to deal with it yourself -->
-                                    <a-checkbox v-model:checked="autoLogin" size="small">{{
-                                        t('sys.login.autoLogin')
-                                    }}</a-checkbox>
+                                    <a-checkbox v-model:checked="autoLogin" size="small">{{ t('sys.login.autoLogin') }}</a-checkbox>
                                 </a-form-item>
                             </a-col>
                             <a-col :span="12">
                                 <a-form-item :style="{ 'text-align': 'right' }">
                                     <!-- No logic, you need to deal with it yourself -->
-                                    <a-button type="link" size="small">{{
-                                        t('sys.login.forgetPassword')
-                                    }}</a-button>
+                                    <a-button type="link" size="small">{{ t('sys.login.forgetPassword') }}</a-button>
                                 </a-form-item>
                             </a-col>
                         </a-row>
                         <a-form-item>
-                            <a-button
-                                type="primary"
-                                size="large"
-                                class="rounded-sm"
-                                :block="true"
-                                @click="login"
-                                :loading="formState.loading"
-                                >{{ t('sys.login.loginButton') }}</a-button
-                            >
+                            <a-button type="primary" size="large" class="rounded-sm" :block="true" @click="login" :loading="formState.loading">{{ t('sys.login.loginButton') }}</a-button>
                         </a-form-item>
                     </a-form>
                 </div>
